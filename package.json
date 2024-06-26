@@ -1,0 +1,23 @@
+{
+  "name": "moneytracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "server": "npm run watch --prefix server",
+    "client": "npm run start --prefix client",
+    "watch": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.5",
+    "bcryptjs": "^2.4.3",
+    "express-async-handler": "^1.2.0",
+    "formik": "^2.4.6",
+    "jsonwebtoken": "^9.0.2",
+    "react-redux": "^9.1.2",
+    "yup": "^1.4.0"
+  }
+}
