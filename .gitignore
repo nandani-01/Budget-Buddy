@@ -1,6 +1,6 @@
-nodemodules/
-client/auth/nodemodules
-server/nodemodules
+node_modules/
+client/auth/node_modules/
+server/node_modules/
 
 .env
 client/auth/.env
