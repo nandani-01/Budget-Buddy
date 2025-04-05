@@ -51,34 +51,13 @@ module.exports.DeleteRecord = async (req, res) => {
         const deletedTransaction = await Records.findByIdAndDelete(id);
 
         if (!deletedTransaction) {
-            return res.status(404).json({ message: "Transaction not found" });
+            return res.status(404).json({ message: "Transaction not found", success: false });
         }
 
-        res.status(200).json({ message: "Transaction deleted successfully" });
+        const transactions = await Records.find({ user: req.user });
+        res.status(200).json({ message: "Transaction deleted successfully", success: true, transactions });
     } catch (error) {
         console.error("Error deleting transaction:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-};
-
-module.exports.UpdateRecord = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { title, amount, description, category } = req.body;
-
-        const updatedTransaction = await Records.findByIdAndUpdate(
-            id,
-            { title, amount, description, category },
-            { new: true }
-        );
-
-        if (!updatedTransaction) {
-            return res.status(404).json({ message: "Transaction not found" });
-        }
-
-        res.status(200).json({ message: "Transaction updated successfully", updatedTransaction });
-    } catch (error) {
-        console.error("Error updating transaction:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error", success: false });
     }
 };

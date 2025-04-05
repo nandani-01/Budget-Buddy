@@ -4,10 +4,14 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is loaded
 import logoimage from "../img/data.png";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { useThemeContext } from "../context/ThemeContext";
+
+
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [cookies] = useCookies(["token"]);
+  const { isDarkTheme, toggleTheme } = useThemeContext();
 
 
   const handleLogout = () => {
@@ -33,14 +37,26 @@ const Navbar = () => {
         .rounded-2 {
           border-radius: 0.25rem;
         }
+        body {
+          background-color: ${isDarkTheme ? "#121212" : "#fff"};
+          color: ${isDarkTheme ? "white" : "black"};
+        }
+        .navbar {
+          background-color: ${isDarkTheme ? "#1c1c1c" : "#f8f9fa"} !important;
+        }
+        .nav-link {
+          color: ${isDarkTheme ? "#f8f9fa" : "#000"} !important;
+        }
+        .btn-outline-secondary {
+          border-color: ${isDarkTheme ? "#f8f9fa" : "#000"};
+        }
       `}</style>
 
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+<nav className={`navbar navbar-expand-lg ${isDarkTheme ? "navbar-dark bg-dark" : "navbar-light bg-light"} shadow-lg`}>
         <div className="container-fluid">
-          {/* Logo and Brand Name */}
           <Link to="/" className="navbar-brand d-flex align-items-center">
             <img src={logoimage} alt="Logo" className="img-flex me-4 rounded-2" />
-            <span className="fw-bold text-light fs-4">Budget Buddy</span>
+            <span className={`fw-bold fs-4 ${isDarkTheme ? "text-light" : "text-dark"}`}>Budget Buddy</span>
           </Link>
 
           {/* Mobile Menu Toggle Button */}
@@ -75,6 +91,10 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
+
+            <button className="btn btn-outline-secondary ms-3" onClick={toggleTheme}>
+              {isDarkTheme ? "☀️ Light Mode" : "🌙 Dark Mode"}
+            </button>
 
             {/* Login & Logout Buttons */}
             <div className="d-flex ms-3">

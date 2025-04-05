@@ -26,17 +26,7 @@ const RecordsSchema = mongoose.Schema({
         ref: "User",
         required: [true ,"User Id is required"],
     }
-},
-{
-    timestamp:true,
-    toJSON:{
-        virtual: true,
-    },
-    toObject: {
-        virtuals: true,
-    },
-}
-);
+},{timestamps:true})
 
 const Records = mongoose.model("Records", RecordsSchema);
 

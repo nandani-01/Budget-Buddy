@@ -3,8 +3,11 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import { useThemeContext } from "../context/ThemeContext";
 
 const RecordForm = () => {
+  const [customTitle, setCustomTitle] = useState("");
+  const { isDarkTheme } = useThemeContext();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
@@ -30,11 +33,12 @@ const RecordForm = () => {
     toast.success(msg, { position: "bottom-left" });
 
   const handleSubmit = async (e) => {
+    const finalTitle = title === "other" ? customTitle : title;
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/record", // Backend endpoint for transactions
-        formData,
+        "http://localhost:4000/record",
+        { ...formData, title: finalTitle },
         { withCredentials: true }
       );
 
@@ -63,27 +67,69 @@ const RecordForm = () => {
       amount: "",
       category: "",
     });
+    setCustomTitle("");
   };
 
   return (
-    <div className="container mt-4">
+    <div
+      className="container mt-4"
+      style={{
+        backgroundColor: isDarkTheme ? "#121212" : "#ffffff",
+        color: isDarkTheme ? "#ffffff" : "#000000",
+        padding: "20px",
+        borderRadius: "8px",
+        minHeight: "100vh",
+      }}
+    >
       <h2 className="mb-3">Record New Transaction</h2>
-      <form onSubmit={handleSubmit} className="p-3 border rounded shadow-sm bg-light">
-        
-        {/* Title and Amount Side by Side */}
+      <form
+        onSubmit={handleSubmit}
+        className="p-3 border rounded shadow-sm"
+        style={{
+          backgroundColor: isDarkTheme ? "#1e1e1e" : "#f8f9fa",
+          color: isDarkTheme ? "#ffffff" : "#000000",
+        }}
+      >
         <div className="form-row row">
           <div className="form-group col-md-6">
             <label htmlFor="title">Title</label>
-            <input
-              type="text"
+            <select
               className="form-control"
               id="title"
               name="title"
               value={title}
-              placeholder="Enter title"
               onChange={handleOnChange}
               required
-            />
+              style={{
+                backgroundColor: isDarkTheme ? "#333" : "#fff",
+                color: isDarkTheme ? "#fff" : "#000",
+              }}
+            >
+              <option value="" disabled >Select Title</option>
+              <option value="education">Education</option>
+              <option value="groceries">Groceries</option>
+              <option value="health">Health</option>
+              <option value="subscriptions">Subscriptions</option>
+              <option value="takeaways">Takeaways</option>
+              <option value="clothing">Clothing</option>
+              <option value="travelling">Travelling</option>
+              <option value="other">Other</option>
+            </select>
+
+            {title === "other" && (
+              <input
+                type="text"
+                className="form-control mt-2"
+                placeholder="Enter custom title"
+                value={customTitle}
+                onChange={(e) => setCustomTitle(e.target.value)}
+                required
+                style={{
+                  backgroundColor: isDarkTheme ? "#333" : "#fff",
+                  color: isDarkTheme ? "#fff" : "#000",
+                }}
+              />
+            )}
           </div>
           <div className="form-group col-md-6">
             <label htmlFor="amount">Amount</label>
@@ -96,11 +142,14 @@ const RecordForm = () => {
               placeholder="Enter amount"
               onChange={handleOnChange}
               required
+              style={{
+                backgroundColor: isDarkTheme ? "#333" : "#fff",
+                color: isDarkTheme ? "#fff" : "#000",
+              }}
             />
           </div>
         </div>
 
-        {/* Description Field */}
         <div className="form-group mt-2">
           <label htmlFor="description">Description</label>
           <input
@@ -112,10 +161,13 @@ const RecordForm = () => {
             placeholder="Enter description"
             onChange={handleOnChange}
             required
+            style={{
+              backgroundColor: isDarkTheme ? "#333" : "#fff",
+              color: isDarkTheme ? "#fff" : "#000",
+            }}
           />
         </div>
 
-        {/* Category Dropdown */}
         <div className="form-group mt-2">
           <label htmlFor="category">Category</label>
           <select
@@ -125,6 +177,10 @@ const RecordForm = () => {
             value={category}
             onChange={handleOnChange}
             required
+            style={{
+              backgroundColor: isDarkTheme ? "#333" : "#fff",
+              color: isDarkTheme ? "#fff" : "#000",
+            }}
           >
             <option value="">Select Category...</option>
             <option value="income">Income</option>
@@ -132,8 +188,9 @@ const RecordForm = () => {
           </select>
         </div>
 
-        {/* Submit Button */}
-        <button type="submit" className="btn btn-success w-100 mt-3">Add Transaction</button>
+        <button type="submit" className="btn btn-success w-100 mt-3">
+          Add Transaction
+        </button>
       </form>
       <ToastContainer />
     </div>
